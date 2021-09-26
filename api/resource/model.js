@@ -1,10 +1,17 @@
 // build your `Resource` model here
-const getResources = () => {
-  return Promise.resolve('Awesome Resource');
+const db = require('../../data/dbConfig');
+
+const getResources = async () => {
+  const resourceRows = await db('resources as r');
+  return resourceRows;
 };
 
 const create = (resource) => {
-  return Promise.resolve(`Testing creation of ${resource}`);
+  return db('resources')
+    .insert(resource)
+    .then(([id]) => {
+      return db('resources').where('resource_id', id).first();
+    });
 };
 
 module.exports = { getResources, create };
